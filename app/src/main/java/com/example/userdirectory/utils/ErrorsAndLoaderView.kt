@@ -1,155 +1,101 @@
-package com.nativ.nativapp.ui.view
+package com.example.userdirectory.utils
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import androidx.constraintlayout.widget.ConstraintLayout
-import com.nativ.nativapp.R
-import com.nativ.nativapp.databinding.LayoutLoaderBinding
-import com.nativ.nativapp.utils.hide
-import com.nativ.nativapp.utils.show
+import android.widget.LinearLayout
+import com.example.userdirectory.databinding.LayoutErrorLoaderBinding
+import com.example.userdirectory.network.NetworkResult
 
-class ErrorsAndLoaderView(context: Context, attributeSet: AttributeSet) :
-    ConstraintLayout(context, attributeSet) {
-    private var binding: LayoutLoaderBinding? = null
+class ErrorLoaderView(context: Context, attributeSet: AttributeSet) :
+    LinearLayout(context, attributeSet) {
+    private var _binding: LayoutErrorLoaderBinding? = null
+    private val binding get() = _binding!!
 
     init {
-        binding = LayoutLoaderBinding.inflate(
+        _binding = LayoutErrorLoaderBinding.inflate(
             LayoutInflater.from(context),
             this, true
         )
-
-        handleEvents()
     }
 
-    private fun handleEvents() {
-        binding?.root?.setOnClickListener {
-
-        }
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        _binding = null
     }
 
-    fun startLoaderAnimation() {
-        binding?.loaderLottie?.show()
-        binding?.loaderLottie?.playAnimation()
-        binding?.includeNetwork?.root?.hide()
-        binding?.includeServer?.root?.hide()
-        binding?.includeEmpty?.root?.hide()
-        binding?.includeLoyalityEmpty?.root?.hide()
-    }
+    fun updateUI(result: NetworkResult<*>?, showToast: Boolean = true) {
+        when (result) {
+            is NetworkResult.Loading -> {
+                showView(ErrorLoader.LOADING, null)
+            }
 
-    fun stopLoaderAnimation() {
-        binding?.loaderLottie?.playAnimation()
-        binding?.loaderLottie?.hide()
-    }
+            is NetworkResult.Failure -> {
+                when {
+                    !isInternetAvailable(context) -> {
+                        showView(ErrorLoader.NO_INTERNET, result)
+                    }
 
-    fun showEmptyView(title: String, msg: String, buttonText:String,onButtonClick: () -> Unit ) {
-        binding?.includeEmpty?.ivEmpty?.setImageResource(R.drawable.ic_empty)
-        /*if (showEmptyImage) {
-            binding?.includeEmpty?.ivEmpty?.show() // Show the empty image
-        } else {
-            binding?.includeEmpty?.ivEmpty?.hide() // Hide the empty image
-        }*/
-        binding?.includeEmpty?.tvTitle?.text = title
-        binding?.includeEmpty?.tvSubTitle?.text = msg
-        if (buttonText.isEmpty())
-            binding?.includeEmpty?.tvAction?.hide()
-        else {
-            binding?.includeEmpty?.tvAction?.show()
-            binding?.includeEmpty?.tvAction?.text = buttonText
-            binding?.includeEmpty?.tvAction?.setOnClickListener {
-                onButtonClick()
+                    result.code >= 500 -> {
+                        if (result.code == 503) {
+                            showView(ErrorLoader.NO_INTERNET, result)
+                        } else {
+                            showView(ErrorLoader.SERVER_ERROR, result)
+                        }
+                    }
+
+                    else -> {
+                        showView(null, null)
+                        if (showToast) {
+                            context.shortToast(result.message ?: "Something went wrong!")
+                        }
+                    }
+                }
+            }
+
+            else -> {
+                showView(null, null)
             }
         }
-        binding?.includeEmpty?.root?.show()
-        binding?.includeServer?.root?.hide()
-        binding?.includeNetwork?.root?.hide()
-        binding?.includeLoyalityEmpty?.root?.hide()
-        binding?.loaderLottie?.hide()
     }
 
-    fun showEmptyViewForAddress(title: String, msg: String, buttonText:String,showEmptyImage: Boolean,onButtonClick: () -> Unit ) {
-        //binding?.includeEmpty?.ivEmpty?.setImageResource(R.drawable.ic_empty)
-        if (showEmptyImage) {
-            binding?.includeEmpty?.ivEmpty?.show() // Show the empty image
-        } else {
-            binding?.includeEmpty?.ivEmpty?.hide() // Hide the empty image
+    fun addRetryListener(listener: () -> Unit) {
+        binding.btRetry.setOnClickListener { listener() }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun showView(type: ErrorLoader?, result: NetworkResult.Failure?) {
+        if (type != ErrorLoader.LOADING) {
+            binding.llProgress.hide()
         }
-        binding?.includeEmpty?.tvTitle?.text = title
-        binding?.includeEmpty?.tvSubTitle?.text = msg
-        if (buttonText.isEmpty())
-            binding?.includeEmpty?.tvAction?.hide()
-        else {
-            binding?.includeEmpty?.tvAction?.show()
-            binding?.includeEmpty?.tvAction?.text = buttonText
-            binding?.includeEmpty?.tvAction?.setOnClickListener {
-                onButtonClick()
+
+        binding.llProgress.hide()
+        binding.llNetworkError.hide()
+        binding.btRetry.hide()
+
+        when (type) {
+            ErrorLoader.LOADING -> {
+                binding.llProgress.show()
             }
-        }
-        binding?.includeEmpty?.root?.show()
-        binding?.includeServer?.root?.hide()
-        binding?.includeNetwork?.root?.hide()
-        binding?.includeLoyalityEmpty?.root?.hide()
-        binding?.loaderLottie?.hide()
-    }
 
-    fun showEmptyLoyalityView(title: String, msg: String, buttonText:String,onButtonClick: () -> Unit ) {
-        binding?.includeLoyalityEmpty?.ivEmptyLoyality?.setImageResource(R.drawable.ic_empty_loyalty)
-        binding?.includeLoyalityEmpty?.tvTitle?.text = title
-        binding?.includeLoyalityEmpty?.tvSubTitle?.text = msg
-        binding?.includeLoyalityEmpty?.tvSubTitle?.setTextColor(resources.getColor(R.color.text_color2))
-        binding?.includeLoyalityEmpty?.ivAction?.setImageResource(R.drawable.ic_back_arrow)
-        binding?.includeLoyalityEmpty?.cslAction?.setOnClickListener {
-                onButtonClick()
+            ErrorLoader.NO_INTERNET -> {
+                binding.llNetworkError.show()
+                binding.btRetry.show()
+                binding.tvTitle.text = "No internet connection!"
             }
-        binding?.includeLoyalityEmpty?.root?.show()
-        binding?.includeEmpty?.root?.hide()
-        binding?.includeServer?.root?.hide()
-        binding?.includeNetwork?.root?.hide()
-        binding?.loaderLottie?.hide()
-    }
 
+            ErrorLoader.NO_RESULTS -> {
 
-    fun showCustomEmptyView(title: String, msg: String, drawable: Int) {
-        binding?.includeEmpty?.ivEmpty?.setImageResource(drawable)
-        binding?.includeEmpty?.tvTitle?.text = title
-        binding?.includeEmpty?.tvSubTitle?.text = msg
-        binding?.includeEmpty?.root?.show()
-        binding?.includeServer?.root?.hide()
-        binding?.includeNetwork?.root?.hide()
-        binding?.includeLoyalityEmpty?.root?.hide()
-        binding?.loaderLottie?.hide()
-    }
+            }
 
-    fun hideEmptyView() {
-        binding?.includeEmpty?.root?.hide()
-        binding?.includeServer?.root?.hide()
-        binding?.includeNetwork?.root?.hide()
-        binding?.includeLoyalityEmpty?.root?.hide()
-        binding?.loaderLottie?.hide()
-    }
+            ErrorLoader.SERVER_ERROR -> {
+                binding.llNetworkError.show()
 
-    fun networkErrorView(onRetryClick: () -> Unit) {
-        binding?.includeNetwork?.root?.show()
-        binding?.includeServer?.root?.hide()
-        binding?.includeEmpty?.root?.hide()
-        binding?.includeLoyalityEmpty?.root?.hide()
-        binding?.loaderLottie?.hide()
+                binding.tvTitle.text = "Something went wrong! Please try again later.\n[${result?.code?.toString() ?: ""}]"
+            }
 
-        binding?.includeNetwork?.tvRetry?.setOnClickListener {
-            onRetryClick()
-        }
-    }
-
-    fun serverErrorView(msg: String?,onRetryClick: () -> Unit) {
-        binding?.includeServer?.root?.show()
-        binding?.includeEmpty?.root?.hide()
-        binding?.includeNetwork?.root?.hide()
-        binding?.includeLoyalityEmpty?.root?.hide()
-        binding?.loaderLottie?.hide()
-        binding?.includeServer?.tvSubTitle?.text = msg
-
-        binding?.includeServer?.tvRetry?.setOnClickListener {
-           onRetryClick()
+            null -> {}
         }
     }
 }

@@ -1,9 +1,13 @@
-package io.proximety.hilitemall.utils
-import com.google.gson.*
+package com.example.userdirectory.utils
+
+import com.google.gson.Gson
+import com.google.gson.JsonIOException
+import com.google.gson.JsonSyntaxException
+import com.google.gson.TypeAdapter
+import com.google.gson.TypeAdapterFactory
 import com.google.gson.reflect.TypeToken
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonWriter
-import timber.log.Timber
 import java.io.IOException
 
 class NullOnExceptionTypeAdapterFactory : TypeAdapterFactory {
@@ -20,15 +24,15 @@ class NullOnExceptionTypeAdapterFactory : TypeAdapterFactory {
                 return try {
                     delegate.read(reader)
                 } catch (e: JsonSyntaxException) {
-                    Timber.e(e, "Error parsing JSON for type ${type.rawType.simpleName} at ${reader.path}")
+                    println("Error parsing JSON for type ${type.rawType.simpleName} at ${reader.path}")
                     reader.skipValue()
                     null
                 } catch (e: JsonIOException) {
-                    Timber.e(e, "IO error parsing JSON for type ${type.rawType.simpleName} at ${reader.path}")
+                    println("IO error parsing JSON for type ${type.rawType.simpleName} at ${reader.path}")
                     reader.skipValue()
                     null
                 } catch (e: IllegalStateException) {
-                    Timber.e(e, "Illegal state parsing JSON for type ${type.rawType.simpleName} at ${reader.path}")
+                    println("Illegal state parsing JSON for type ${type.rawType.simpleName} at ${reader.path}")
                     reader.skipValue()
                     null
                 }

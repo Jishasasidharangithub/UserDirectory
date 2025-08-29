@@ -1,27 +1,40 @@
-package io.proximety.hilitemall.ui.viewmodel
+package com.example.userdirectory.ui.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.userdirectory.model.response.UserListResponseItem
+import com.example.userdirectory.model.response.UserPostResponseItem
+import com.example.userdirectory.network.NetworkResult
+import com.example.userdirectory.network.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.proximety.hilitemall.model.request.ApplyCouponBody
-import io.proximety.hilitemall.model.response.GenericResponse
-import io.proximety.hilitemall.network.NetworkResult
-import io.proximety.hilitemall.network.Repository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ApplyCouponViewModel @Inject constructor(private val repository: Repository) : ViewModel() {
+class UserViewModel @Inject constructor(
+    private val repository: Repository
+) : ViewModel() {
 
-    private val _applyCoupon = MutableLiveData<NetworkResult<GenericResponse?>>()
-    val applyCoupon: MutableLiveData<NetworkResult<GenericResponse?>> get() = _applyCoupon
+    private val _usersList = MutableLiveData<NetworkResult<List<UserListResponseItem>>>()
+    val usersList: MutableLiveData<NetworkResult<List<UserListResponseItem>>> get() = _usersList
 
-    fun applyCoupon(body: ApplyCouponBody) {
+    private val _usersPost = MutableLiveData<NetworkResult<List<UserPostResponseItem>>>()
+    val usersPost: MutableLiveData<NetworkResult<List<UserPostResponseItem>>> get() = _usersPost
+
+    fun usersList() {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.applyCoupon(body).collect { result ->
-                _applyCoupon.postValue(result)
+            repository.usersList().collect { result ->
+                _usersList.postValue(result)
+            }
+        }
+    }
+
+    fun usersPost(userId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.usersPost(userId).collect { result ->
+                _usersPost.postValue(result)
             }
         }
     }

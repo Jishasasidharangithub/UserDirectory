@@ -1,19 +1,14 @@
-package io.proximety.hilitemall.di
+package com.example.userdirectory.di
 
-import android.app.Application
-import android.content.Context
-import android.content.SharedPreferences
+import com.example.userdirectory.BuildConfig
+import com.example.userdirectory.network.ApiService
+import com.example.userdirectory.utils.NullOnExceptionTypeAdapterFactory
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import io.proximety.hilitemall.BuildConfig
-import io.proximety.hilitemall.modules.preference.AppPreferences
-import io.proximety.hilitemall.network.ApiService
-import io.proximety.hilitemall.ui.activity.MainActivity
-import io.proximety.hilitemall.utils.NullOnExceptionTypeAdapterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -25,19 +20,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-    @Provides
-    @Singleton
-    fun provideSharedPreferences(
-        app: Application
-    ): SharedPreferences {
-        return app.getSharedPreferences("hi_lite_2024", Context.MODE_PRIVATE)
-    }
-
-    @Provides
-    @Singleton
-    fun providePreferences(sharedPreferences: SharedPreferences): AppPreferences {
-        return AppPreferences(sharedPreferences)
-    }
 
     @Provides
     @Singleton
@@ -46,7 +28,6 @@ object AppModule {
             .registerTypeAdapterFactory(NullOnExceptionTypeAdapterFactory())
             .create()
     }
-
 
     /*---------------------------------------------------------------------------------------------------*/
     @Singleton
@@ -66,8 +47,6 @@ object AppModule {
             val newUrl = request.url.newBuilder().build()
             val newRequest = request.newBuilder()
                 .url(newUrl)
-                .header("Accept", "application/vnd.api+json")
-                .header("Authorization", "Bearer ${MainActivity.API_TOKEN}")
                 .build()
             chain.proceed(newRequest)
         }

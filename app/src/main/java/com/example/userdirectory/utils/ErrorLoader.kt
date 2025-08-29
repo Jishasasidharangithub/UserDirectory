@@ -1,4 +1,8 @@
 package com.example.userdirectory.utils
 
-class ErrorLoader {
+enum class ErrorLoader {
+    LOADING,
+    NO_RESULTS,
+    SERVER_ERROR,
+    NO_INTERNET
 }

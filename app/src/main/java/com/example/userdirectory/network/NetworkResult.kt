@@ -1,4 +1,4 @@
-package io.proximety.hilitemall.network
+package com.example.userdirectory.network
 
 sealed class NetworkResult<out T> {
 
@@ -19,19 +19,4 @@ sealed class NetworkResult<out T> {
             Loading -> "Loading"
         }
     }
-}
-
-open class Event<out T>(private val content: T) {
-    private var hasBeenHandled = false
-
-    fun getContentIfNotHandled(): T? {
-        return if (hasBeenHandled) {
-            null
-        } else {
-            hasBeenHandled = true
-            content
-        }
-    }
-
-    fun peekContent(): T = content
 }

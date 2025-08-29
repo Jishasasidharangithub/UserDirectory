@@ -7,4 +7,114 @@
     android:layout_height="match_parent"
     tools:context=".ui.activity.UserDetailsActivity">
 
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScroll"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/ivBack"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginStart="15dp"
+                android:contentDescription="@string/back_icon"
+                android:padding="10dp"
+                android:src="@drawable/ic_back" />
+
+            <ImageView
+                android:id="@+id/ivProfile"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_marginTop="15dp"
+                android:contentDescription="@string/profile_icon"
+                android:src="@drawable/placeholder" />
+
+            <TextView
+                android:id="@+id/tvFirstName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="25dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:text="First Name" />
+
+            <TextView
+                android:id="@+id/tvUserName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="25dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:text="@string/user_name" />
+
+            <TextView
+                android:id="@+id/tvEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="25dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/gray"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:text="@string/test_gmail_com" />
+
+            <TextView
+                android:id="@+id/tvPhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="25dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/gray"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:text="@string/_91_0000000000" />
+
+            <TextView
+                android:id="@+id/tvWebsite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="25dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/gray"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:text="www.test.com" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvPost"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:clipToPadding="false"
+                android:padding="20dp"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:itemCount="2"
+                tools:listitem="@layout/item_post" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <com.example.userdirectory.utils.ErrorLoaderView
+        android:id="@+id/errorLoaderView"
+        style="@style/ErrorLoaderStyle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:visibility="gone" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

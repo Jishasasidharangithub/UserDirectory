@@ -1,34 +1,26 @@
-package io.proximety.hilitemall.ui.adapter
+package com.example.userdirectory.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
-import io.proximety.hilitemall.databinding.ItemCouponBinding
-import io.proximety.hilitemall.model.response.food_section.cart_list.Coupon
+import com.example.userdirectory.databinding.ItemUserBinding
+import com.example.userdirectory.model.response.UserListResponseItem
 
-class CouponAdapter(private val listener: CouponClickListener) :
-    ListAdapter<Coupon, CouponAdapter.ViewHolder>(CouponAdapterDiffCallback()) {
-
-    inner class ViewHolder(private val binding: ItemCouponBinding) :
+class UserListAdapter(private val listener: ItemClickListener) :
+    ListAdapter<UserListResponseItem, UserListAdapter.ViewHolder>(UserListAdapterDiffCallback()) {
+    inner class ViewHolder(private val binding: ItemUserBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Coupon) {
+        fun bind(item: UserListResponseItem) {
             binding.apply {
-                ivStoreIcon.load(item.logo)
+                tvUserName.text = item.name
+                tvEmail.text = item.email
+                tvPhone.text = item.phone
 
-                tvTitle.text = item.title
-                tvCouponCode.text = item.code
-                tvStoreName.text = item.restaurantName
-
-                tvApply.setOnClickListener {
-                    listener.onCouponClicked(item)
-                }
-
-                tvMoreInfo.setOnClickListener {
-                    listener.onMoreInfo(item)
+                root.setOnClickListener {
+                    listener.onDetailClick(item)
                 }
             }
         }
@@ -36,7 +28,7 @@ class CouponAdapter(private val listener: CouponClickListener) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
-            ItemCouponBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -44,19 +36,24 @@ class CouponAdapter(private val listener: CouponClickListener) :
         holder.bind(getItem(position))
     }
 
-    class CouponAdapterDiffCallback : DiffUtil.ItemCallback<Coupon>() {
-        override fun areItemsTheSame(oldItem: Coupon, newItem: Coupon): Boolean {
+    class UserListAdapterDiffCallback : DiffUtil.ItemCallback<UserListResponseItem>() {
+        override fun areItemsTheSame(
+            oldItem: UserListResponseItem,
+            newItem: UserListResponseItem
+        ): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: Coupon, newItem: Coupon): Boolean {
+        override fun areContentsTheSame(
+            oldItem: UserListResponseItem,
+            newItem: UserListResponseItem
+        ): Boolean {
             return oldItem == newItem
         }
     }
 
-    interface CouponClickListener {
-        fun onCouponClicked(coupon: Coupon)
-        fun onMoreInfo(coupon: Coupon)
+    interface ItemClickListener {
+        fun onDetailClick(user: UserListResponseItem)
     }
 
 }

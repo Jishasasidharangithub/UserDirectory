@@ -2,12 +2,6 @@ package com.example.userdirectory.model.response
 
 import com.google.gson.annotations.SerializedName
 
-data class UserPostResponse(
-
-	@field:SerializedName("UserPostResponse")
-	val userPostResponse: List<UserPostResponseItem?>? = null
-)
-
 data class UserPostResponseItem(
 
 	@field:SerializedName("id")

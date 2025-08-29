@@ -1,75 +1,71 @@
 package com.example.userdirectory.model.response
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
-data class UserListResponse(
-
-	@field:SerializedName("UserListResponse")
-	val userListResponse: List<UserListResponseItem?>? = null
-)
-
+@Parcelize
 data class Address(
+    @field:SerializedName("zipcode")
+    val zipcode: String? = null,
 
-	@field:SerializedName("zipcode")
-	val zipcode: String? = null,
+    @field:SerializedName("geo")
+    val geo: Geo? = null,
 
-	@field:SerializedName("geo")
-	val geo: Geo? = null,
+    @field:SerializedName("suite")
+    val suite: String? = null,
 
-	@field:SerializedName("suite")
-	val suite: String? = null,
+    @field:SerializedName("city")
+    val city: String? = null,
 
-	@field:SerializedName("city")
-	val city: String? = null,
+    @field:SerializedName("street")
+    val street: String? = null
+) : Parcelable
 
-	@field:SerializedName("street")
-	val street: String? = null
-)
-
+@Parcelize
 data class Geo(
+    @field:SerializedName("lng")
+    val lng: String? = null,
 
-	@field:SerializedName("lng")
-	val lng: String? = null,
+    @field:SerializedName("lat")
+    val lat: String? = null
+) : Parcelable
 
-	@field:SerializedName("lat")
-	val lat: String? = null
-)
-
+@Parcelize
 data class Company(
+    @field:SerializedName("bs")
+    val bs: String? = null,
 
-	@field:SerializedName("bs")
-	val bs: String? = null,
+    @field:SerializedName("catchPhrase")
+    val catchPhrase: String? = null,
 
-	@field:SerializedName("catchPhrase")
-	val catchPhrase: String? = null,
+    @field:SerializedName("name")
+    val name: String? = null
+) : Parcelable
 
-	@field:SerializedName("name")
-	val name: String? = null
-)
-
+@Parcelize
 data class UserListResponseItem(
+    @field:SerializedName("website")
+    val website: String? = null,
 
-	@field:SerializedName("website")
-	val website: String? = null,
+    @field:SerializedName("address")
+    val address: Address? = null,
 
-	@field:SerializedName("address")
-	val address: Address? = null,
+    @field:SerializedName("phone")
+    val phone: String? = null,
 
-	@field:SerializedName("phone")
-	val phone: String? = null,
+    @field:SerializedName("name")
+    val name: String? = null,
 
-	@field:SerializedName("name")
-	val name: String? = null,
+    @field:SerializedName("company")
+    val company: Company? = null,
 
-	@field:SerializedName("company")
-	val company: Company? = null,
+    @field:SerializedName("id")
+    val id: Int? = null,
 
-	@field:SerializedName("id")
-	val id: Int? = null,
+    @field:SerializedName("email")
+    val email: String? = null,
 
-	@field:SerializedName("email")
-	val email: String? = null,
-
-	@field:SerializedName("username")
-	val username: String? = null
-)
+    @field:SerializedName("username")
+    val username: String? = null
+) : Parcelable
